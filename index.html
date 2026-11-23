@@ -1,0 +1,1537 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>¡Feliz Cumpleaños Michelle! 🎂</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Satisfy&family=Poppins:wght@300;400;600;700;900&family=Pacifico&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ═══════════════════════════════════════════════════════
+       RESET & BASE
+    ═══════════════════════════════════════════════════════ */
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+      font-family: 'Poppins', sans-serif;
+      touch-action: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       SCENES CONTAINER
+    ═══════════════════════════════════════════════════════ */
+    .scene {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+      z-index: 1;
+    }
+
+    .scene.active {
+      opacity: 1;
+      pointer-events: auto;
+      z-index: 10;
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       SCENE 1: MATRIX RAIN + COUNTDOWN
+    ═══════════════════════════════════════════════════════ */
+    #matrix-scene {
+      background: #000;
+    }
+
+    #matrix-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .countdown-text {
+      position: relative;
+      z-index: 5;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 900;
+      color: #ff69b4;
+      text-shadow:
+        0 0 20px rgba(255, 105, 180, 0.8),
+        0 0 40px rgba(255, 105, 180, 0.6),
+        0 0 80px rgba(255, 105, 180, 0.4);
+      opacity: 0;
+      transform: scale(0.3);
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      text-align: center;
+    }
+
+    .countdown-text.show {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .countdown-text.hide {
+      opacity: 0;
+      transform: scale(2);
+      transition: all 0.4s ease-in;
+    }
+
+    .countdown-number {
+      font-size: clamp(80px, 20vw, 200px);
+    }
+
+    .countdown-word {
+      font-size: clamp(40px, 10vw, 120px);
+      letter-spacing: 8px;
+      text-transform: uppercase;
+    }
+
+    .countdown-name {
+      font-size: clamp(50px, 12vw, 140px);
+      font-family: 'Dancing Script', cursive;
+      letter-spacing: 4px;
+      background: linear-gradient(135deg, #ff69b4, #ff1493, #ff69b4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 30px rgba(255, 105, 180, 0.8));
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       STARS BACKGROUND (Scenes 2-4)
+    ═══════════════════════════════════════════════════════ */
+    .stars-bg {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, #0a0a2e 0%, #000 100%);
+      overflow: hidden;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: #fff;
+      border-radius: 50%;
+      animation: twinkle var(--duration) ease-in-out infinite;
+      animation-delay: var(--delay);
+    }
+
+    @keyframes twinkle {
+
+      0%,
+      100% {
+        opacity: 0.2;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 1;
+        transform: scale(1.5);
+      }
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       SCENE 2: CAT BIRTHDAY
+    ═══════════════════════════════════════════════════════ */
+    #cat-scene {
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .cat-container {
+      position: relative;
+      z-index: 5;
+      text-align: center;
+      animation: floatCat 3s ease-in-out infinite;
+    }
+
+    @keyframes floatCat {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-15px);
+      }
+    }
+
+    .cat-emoji {
+      font-size: clamp(100px, 25vw, 200px);
+      display: block;
+      filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
+    }
+
+    .birthday-candles {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .candle {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: candleGlow 1s ease-in-out infinite alternate;
+    }
+
+    .candle:nth-child(even) {
+      animation-delay: 0.5s;
+    }
+
+    .flame {
+      font-size: 24px;
+      animation: flicker 0.3s ease-in-out infinite alternate;
+    }
+
+    @keyframes flicker {
+      0% {
+        transform: scaleY(1) rotate(-3deg);
+      }
+
+      100% {
+        transform: scaleY(1.2) rotate(3deg);
+      }
+    }
+
+    .candle-stick {
+      width: 8px;
+      height: 30px;
+      border-radius: 2px;
+    }
+
+    @keyframes candleGlow {
+      0% {
+        filter: brightness(1);
+      }
+
+      100% {
+        filter: brightness(1.3);
+      }
+    }
+
+    .cat-birthday-text {
+      font-family: 'Satisfy', cursive;
+      font-size: clamp(24px, 6vw, 48px);
+      color: #ff69b4;
+      text-shadow: 0 0 20px rgba(255, 105, 180, 0.6);
+      margin-top: 20px;
+      position: relative;
+      z-index: 5;
+    }
+
+    .age-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #ff69b4, #ff1493);
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 900;
+      font-size: clamp(28px, 7vw, 50px);
+      width: clamp(60px, 15vw, 100px);
+      height: clamp(60px, 15vw, 100px);
+      line-height: clamp(60px, 15vw, 100px);
+      border-radius: 50%;
+      text-align: center;
+      margin-top: 15px;
+      box-shadow: 0 0 30px rgba(255, 105, 180, 0.6);
+      animation: pulseBadge 2s ease-in-out infinite;
+      position: relative;
+      z-index: 5;
+    }
+
+    @keyframes pulseBadge {
+
+      0%,
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 30px rgba(255, 105, 180, 0.6);
+      }
+
+      50% {
+        transform: scale(1.1);
+        box-shadow: 0 0 50px rgba(255, 105, 180, 0.8);
+      }
+    }
+
+    .sparkle {
+      position: absolute;
+      font-size: 20px;
+      animation: sparkleAnim 2s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    @keyframes sparkleAnim {
+
+      0%,
+      100% {
+        opacity: 0;
+        transform: scale(0) rotate(0deg);
+      }
+
+      50% {
+        opacity: 1;
+        transform: scale(1) rotate(180deg);
+      }
+    }
+
+    .tap-hint {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 14px;
+      z-index: 5;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 0.3;
+      }
+
+      50% {
+        opacity: 0.8;
+      }
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       SCENE 3: INTERACTIVE ALBUM
+    ═══════════════════════════════════════════════════════ */
+    #album-scene {
+      flex-direction: column;
+    }
+
+    .album-wrapper {
+      position: relative;
+      z-index: 5;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .album-message {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 25px;
+      padding: 12px 30px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      z-index: 10;
+    }
+
+    .album-message p {
+      font-family: 'Satisfy', cursive;
+      font-size: clamp(18px, 4vw, 28px);
+      color: #333;
+    }
+
+    .album-message .emoji-icon {
+      color: #ff69b4;
+    }
+
+    .photo-stack {
+      position: relative;
+      width: clamp(260px, 70vw, 400px);
+      height: clamp(340px, 60vh, 500px);
+      perspective: 1000px;
+    }
+
+    .photo-card {
+      position: absolute;
+      inset: 0;
+      background: #fff;
+      border-radius: 8px;
+      padding: 15px 15px 50px 15px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+      cursor: grab;
+      transition: transform 0.3s ease;
+      will-change: transform;
+      touch-action: none;
+    }
+
+    .photo-card:active {
+      cursor: grabbing;
+    }
+
+    .photo-card .photo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 4px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 14px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .photo-card .photo-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .photo-card .photo-caption {
+      position: absolute;
+      bottom: 15px;
+      left: 15px;
+      right: 15px;
+      text-align: center;
+      font-family: 'Satisfy', cursive;
+      font-size: 16px;
+      color: #555;
+    }
+
+    .swipe-indicator {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 13px;
+      z-index: 15;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      animation: swipeHint 2s ease-in-out infinite;
+    }
+
+    @keyframes swipeHint {
+
+      0%,
+      100% {
+        transform: translateX(-50%);
+      }
+
+      50% {
+        transform: translateX(-30%);
+      }
+    }
+
+    .dots-indicator {
+      display: flex;
+      gap: 8px;
+      margin-top: 20px;
+      z-index: 15;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .dot.active {
+      background: #ff69b4;
+      transform: scale(1.3);
+      box-shadow: 0 0 10px rgba(255, 105, 180, 0.6);
+    }
+
+    .album-next-btn {
+      position: absolute;
+      bottom: 50px;
+      right: 30px;
+      background: rgba(255, 105, 180, 0.3);
+      border: 1px solid rgba(255, 105, 180, 0.5);
+      color: #ff69b4;
+      padding: 10px 20px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      z-index: 20;
+      transition: all 0.3s ease;
+      display: none;
+    }
+
+    .album-next-btn.visible {
+      display: block;
+    }
+
+    .album-next-btn:hover {
+      background: rgba(255, 105, 180, 0.5);
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       SCENE 4: HEART & 25 MORPHING COLLAGE
+    ═══════════════════════════════════════════════════════ */
+    #collage-scene {
+      flex-direction: column;
+      gap: 15px;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .collage-container {
+      position: relative;
+      z-index: 5;
+      width: clamp(300px, 92vw, 540px);
+      height: clamp(300px, 62vh, 480px);
+    }
+
+    .collage-photo {
+      position: absolute;
+      width: clamp(50px, 13.5vw, 76px);
+      height: clamp(50px, 13.5vw, 76px);
+      background: #fff;
+      border-radius: 12px;
+      padding: 3.5px;
+      box-shadow:
+        0 0 12px rgba(255, 105, 180, 0.65),
+        0 0 25px rgba(255, 105, 180, 0.3);
+      opacity: 0;
+      transform: scale(0) rotate(var(--rot, 0deg));
+      /* Smooth morphing transition when moving between Heart and 25 */
+      transition: left 1.1s cubic-bezier(0.34, 1.25, 0.64, 1),
+                  top 1.1s cubic-bezier(0.34, 1.25, 0.64, 1),
+                  transform 1.1s cubic-bezier(0.34, 1.25, 0.64, 1),
+                  opacity 0.4s ease,
+                  box-shadow 0.3s ease;
+      overflow: hidden;
+      will-change: left, top, transform;
+      cursor: pointer;
+    }
+
+    .collage-photo.show {
+      opacity: 1;
+      transform: scale(1) rotate(var(--rot, 0deg));
+    }
+
+    .collage-photo:hover, .collage-photo:active {
+      transform: scale(1.18) rotate(0deg) !important;
+      z-index: 99 !important;
+      box-shadow: 0 0 25px rgba(255, 105, 180, 0.95), 0 0 45px rgba(255, 105, 180, 0.5);
+    }
+
+    .collage-photo .collage-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 9px;
+      object-fit: cover;
+      display: block;
+      pointer-events: none;
+    }
+
+    .collage-title {
+      position: relative;
+      z-index: 5;
+      font-family: 'Satisfy', cursive;
+      font-size: clamp(24px, 6vw, 40px);
+      color: #ff85c2;
+      text-shadow:
+        0 0 12px rgba(255, 105, 180, 0.6),
+        0 0 25px rgba(255, 105, 180, 0.3);
+      text-align: center;
+      opacity: 0;
+      transform: translateY(15px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      line-height: 1.3;
+    }
+
+    .collage-title.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       PHOTO MODAL (LIGHTBOX)
+    ═══════════════════════════════════════════════════════ */
+    .photo-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(8px);
+    }
+
+    .photo-modal.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .photo-modal-backdrop {
+      position: absolute;
+      inset: 0;
+    }
+
+    .photo-modal-content {
+      position: relative;
+      background: #fff;
+      padding: 10px 10px 35px 10px;
+      border-radius: 14px;
+      box-shadow: 0 0 35px rgba(255, 105, 180, 0.8);
+      max-width: 90vw;
+      max-height: 82vh;
+      transform: scale(0.85);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 2;
+    }
+
+    .photo-modal.open .photo-modal-content {
+      transform: scale(1);
+    }
+
+    .photo-modal-content img {
+      max-width: 82vw;
+      max-height: 70vh;
+      object-fit: contain;
+      border-radius: 8px;
+      display: block;
+    }
+
+    .photo-modal-close {
+      position: absolute;
+      top: -12px;
+      right: -12px;
+      width: 34px;
+      height: 34px;
+      background: #ff1493;
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 16px;
+      box-shadow: 0 0 15px rgba(255, 20, 147, 0.8);
+      transition: transform 0.2s ease;
+    }
+
+    .photo-modal-close:hover {
+      transform: scale(1.1);
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       FLOATING EMOJIS (decoration — no hearts)
+    ═══════════════════════════════════════════════════════ */
+    .floating-emojis {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 100;
+      overflow: hidden;
+    }
+
+    .floating-emoji {
+      position: absolute;
+      bottom: -30px;
+      font-size: 20px;
+      animation: floatUp var(--dur) ease-in forwards;
+      animation-delay: var(--delay);
+      opacity: 0;
+    }
+
+    @keyframes floatUp {
+      0% {
+        opacity: 0;
+        transform: translateY(0) rotate(0deg) scale(0.5);
+      }
+
+      10% {
+        opacity: 1;
+      }
+
+      90% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+        transform: translateY(-100vh) rotate(720deg) scale(1);
+      }
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       AUDIO BUTTON
+    ═══════════════════════════════════════════════════════ */
+    .audio-btn {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      z-index: 999;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 105, 180, 0.5);
+      background: rgba(0, 0, 0, 0.5);
+      color: #ff69b4;
+      font-size: 18px;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+
+    .audio-btn.visible {
+      display: flex;
+    }
+
+    .audio-btn:hover {
+      border-color: #ff69b4;
+      background: rgba(255, 105, 180, 0.2);
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       START SCREEN
+    ═══════════════════════════════════════════════════════ */
+    #start-screen {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center, #1a0a1a 0%, #000 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.8s ease;
+    }
+
+    #start-screen.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .start-envelope {
+      font-size: 80px;
+      margin-bottom: 30px;
+      animation: envelopeBounce 2s ease-in-out infinite;
+    }
+
+    @keyframes envelopeBounce {
+
+      0%,
+      100% {
+        transform: translateY(0) rotate(-5deg);
+      }
+
+      50% {
+        transform: translateY(-15px) rotate(5deg);
+      }
+    }
+
+    .start-text {
+      font-family: 'Satisfy', cursive;
+      font-size: clamp(22px, 5vw, 32px);
+      color: #ff69b4;
+      margin-bottom: 30px;
+      text-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
+    }
+
+    .start-btn {
+      background: linear-gradient(135deg, #ff69b4, #ff1493);
+      border: none;
+      color: #fff;
+      padding: 15px 40px;
+      border-radius: 50px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 0 30px rgba(255, 105, 180, 0.5);
+      transition: all 0.3s ease;
+      letter-spacing: 2px;
+    }
+
+    .start-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 50px rgba(255, 105, 180, 0.7);
+    }
+
+    .start-btn:active {
+      transform: scale(0.98);
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════════════════ */
+    @media (max-width: 480px) {
+      .photo-stack {
+        width: 85vw;
+        height: 55vh;
+      }
+
+      .album-message {
+        padding: 10px 20px;
+        margin-bottom: 15px;
+      }
+
+      .collage-container {
+        gap: 5px;
+        padding: 5px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- AUDIO -->
+  <audio id="bg-music" loop preload="auto">
+    <source src="musica.mpeg" type="audio/mpeg">
+  </audio>
+
+  <button class="audio-btn" id="audio-btn" title="Música">🔊</button>
+
+  <!-- ═══════════════════════════════════════════════════════
+       START SCREEN
+  ═══════════════════════════════════════════════════════ -->
+  <div id="start-screen">
+    <div class="start-envelope">🎁</div>
+    <p class="start-text">Tienes un mensaje especial...</p>
+    <button class="start-btn" id="start-btn">Abrir 🎀</button>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SCENE 1: MATRIX RAIN + COUNTDOWN
+  ═══════════════════════════════════════════════════════ -->
+  <div id="matrix-scene" class="scene">
+    <canvas id="matrix-canvas"></canvas>
+    <div class="countdown-text" id="countdown-display"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SCENE 2: CAT BIRTHDAY
+  ═══════════════════════════════════════════════════════ -->
+  <div id="cat-scene" class="scene">
+    <div class="stars-bg" id="stars-bg-cat"></div>
+    <div class="cat-container">
+      <div class="birthday-candles">
+        <div class="candle"><span class="flame">🔥</span>
+          <div class="candle-stick" style="background: #ff69b4;"></div>
+        </div>
+        <div class="candle"><span class="flame">🔥</span>
+          <div class="candle-stick" style="background: #ff1493;"></div>
+        </div>
+        <div class="candle"><span class="flame">🔥</span>
+          <div class="candle-stick" style="background: #ff69b4;"></div>
+        </div>
+        <div class="candle"><span class="flame">🔥</span>
+          <div class="candle-stick" style="background: #ff1493;"></div>
+        </div>
+        <div class="candle"><span class="flame">🔥</span>
+          <div class="candle-stick" style="background: #ff69b4;"></div>
+        </div>
+      </div>
+      <span class="cat-emoji">🐱</span>
+      <p class="cat-birthday-text">¡Feliz Cumpleaños Michelle!</p>
+      <div class="age-badge">25</div>
+    </div>
+    <div class="tap-hint">Toca para continuar ✨</div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SCENE 3: INTERACTIVE ALBUM
+  ═══════════════════════════════════════════════════════ -->
+  <div id="album-scene" class="scene">
+    <div class="stars-bg" id="stars-bg-album"></div>
+    <div class="album-wrapper">
+      <div class="album-message">
+        <p>Feliz Cumpleaños Michelle <span class="emoji-icon">🎂</span></p>
+      </div>
+      <div class="photo-stack" id="photo-stack">
+        <!-- Cards injected by JS -->
+      </div>
+      <div class="dots-indicator" id="dots-indicator"></div>
+      <div class="swipe-indicator">
+        <span>👆 Desliza para ver más</span>
+      </div>
+    </div>
+    <button class="album-next-btn" id="album-next-btn">Ver collage 🌟</button>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SCENE 4: MOSAIC COLLAGE
+  ═══════════════════════════════════════════════════════ -->
+  <div id="collage-scene" class="scene">
+    <div class="stars-bg" id="stars-bg-collage"></div>
+    <div class="collage-container" id="collage-container">
+      <!-- Photos injected by JS -->
+    </div>
+    <p class="collage-title" id="collage-title">¡Que sean muchos más! 🥳🎉<br>Michelle 🎂</p>
+  </div>
+
+  <!-- Floating emojis overlay -->
+  <div class="floating-emojis" id="floating-emojis"></div>
+
+  <!-- PHOTO MODAL (LIGHTBOX) -->
+  <div id="photo-modal" class="photo-modal">
+    <div class="photo-modal-backdrop" id="modal-backdrop"></div>
+    <div class="photo-modal-content">
+      <img id="modal-img" src="" alt="Foto de Michelle">
+      <div class="photo-modal-close" id="modal-close">✕</div>
+    </div>
+  </div>
+
+  <script>
+    /* ═══════════════════════════════════════════════════════
+       CONFIGURATION
+    ═══════════════════════════════════════════════════════ */
+
+    const PHOTO_DIR = 'michelle-fotos/';
+
+    const ALBUM_PHOTOS = [
+      { src: PHOTO_DIR + '1.jpeg', caption: 'Siempre brillando ✨' },
+      { src: PHOTO_DIR + '2.jpeg', caption: 'Momentos increíbles 🌟' },
+      { src: PHOTO_DIR + '3.jpeg', caption: 'La mejor sonrisa 😊' },
+      { src: PHOTO_DIR + '4.jpeg', caption: 'Siempre pasándola bien 🎉' },
+      { src: PHOTO_DIR + '5.jpeg', caption: 'Recuerdos bonitos 🌸' },
+      { src: PHOTO_DIR + '6.jpeg', caption: 'Eres increíble 🥳' },
+      { src: PHOTO_DIR + '7.jpeg', caption: 'Que linda 🌺' },
+      { src: PHOTO_DIR + '8.jpeg', caption: 'Pura buena vibra ☀️' },
+      { src: PHOTO_DIR + '9.jpeg', caption: 'Siempre feliz 🎊' },
+      { src: PHOTO_DIR + '10.jpeg', caption: '¡Feliz cumple! 🎂' },
+    ];
+
+    // Photos array for collage
+    const COLLAGE_PHOTOS = [
+      PHOTO_DIR + '1.jpeg', PHOTO_DIR + '2.jpeg', PHOTO_DIR + '3.jpeg',
+      PHOTO_DIR + '4.jpeg', PHOTO_DIR + '5.jpeg', PHOTO_DIR + '6.jpeg',
+      PHOTO_DIR + '7.jpeg', PHOTO_DIR + '8.jpeg', PHOTO_DIR + '9.jpeg',
+      PHOTO_DIR + '10.jpeg'
+    ];
+
+    /* ═══════════════════════════════════════════════════════
+       GLOBALS
+    ═══════════════════════════════════════════════════════ */
+    let currentScene = 0;
+    let matrixAnimId = null;
+    let musicPlaying = false;
+
+    /* ═══════════════════════════════════════════════════════
+       AUDIO CONTROL
+    ═══════════════════════════════════════════════════════ */
+    function startMusic() {
+      const audio = document.getElementById('bg-music');
+      const btn = document.getElementById('audio-btn');
+      audio.volume = 0.5;
+      audio.play().then(() => {
+        musicPlaying = true;
+        btn.classList.add('visible');
+        btn.textContent = '🔊';
+      }).catch(() => {
+        // Autoplay blocked — will try again on next interaction
+        btn.classList.add('visible');
+        btn.textContent = '🔇';
+      });
+    }
+
+    function toggleMusic() {
+      const audio = document.getElementById('bg-music');
+      const btn = document.getElementById('audio-btn');
+      if (audio.paused) {
+        audio.play();
+        btn.textContent = '🔊';
+        musicPlaying = true;
+      } else {
+        audio.pause();
+        btn.textContent = '🔇';
+        musicPlaying = false;
+      }
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       UTILITY: Generate Stars
+    ═══════════════════════════════════════════════════════ */
+    function generateStars(containerId, count = 150) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      for (let i = 0; i < count; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        star.style.setProperty('--duration', (2 + Math.random() * 4) + 's');
+        star.style.setProperty('--delay', (Math.random() * 5) + 's');
+        star.style.width = (1 + Math.random() * 2) + 'px';
+        star.style.height = star.style.width;
+        container.appendChild(star);
+      }
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       UTILITY: Floating Emojis (no hearts)
+    ═══════════════════════════════════════════════════════ */
+    function launchEmojis(count = 20) {
+      const container = document.getElementById('floating-emojis');
+      const emojis = ['✨', '🌟', '🎉', '🎊', '🥳', '🌸', '🎀', '⭐', '🎂', '🌺'];
+      for (let i = 0; i < count; i++) {
+        const el = document.createElement('div');
+        el.className = 'floating-emoji';
+        el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        el.style.left = Math.random() * 100 + '%';
+        el.style.setProperty('--dur', (4 + Math.random() * 4) + 's');
+        el.style.setProperty('--delay', (Math.random() * 3) + 's');
+        el.style.fontSize = (14 + Math.random() * 20) + 'px';
+        container.appendChild(el);
+        setTimeout(() => el.remove(), 10000);
+      }
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       UTILITY: Sparkles
+    ═══════════════════════════════════════════════════════ */
+    function createSparkles(parent, count = 15) {
+      const emojis = ['✨', '⭐', '🌟', '💫'];
+      for (let i = 0; i < count; i++) {
+        const sparkle = document.createElement('span');
+        sparkle.className = 'sparkle';
+        sparkle.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        sparkle.style.left = Math.random() * 100 + '%';
+        sparkle.style.top = Math.random() * 100 + '%';
+        sparkle.style.animationDelay = (Math.random() * 3) + 's';
+        sparkle.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+        parent.appendChild(sparkle);
+      }
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       SCENE MANAGER
+    ═══════════════════════════════════════════════════════ */
+    function showScene(sceneId) {
+      document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
+      const scene = document.getElementById(sceneId);
+      if (scene) {
+        scene.classList.add('active');
+      }
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       SCENE 1: MATRIX RAIN
+    ═══════════════════════════════════════════════════════ */
+    function initMatrix() {
+      const canvas = document.getElementById('matrix-canvas');
+      const ctx = canvas.getContext('2d');
+
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ★☆';
+      const fontSize = 14;
+      const columns = Math.floor(canvas.width / fontSize);
+      const drops = new Array(columns).fill(1);
+
+      for (let i = 0; i < drops.length; i++) {
+        drops[i] = Math.floor(Math.random() * -50);
+      }
+
+      function drawMatrix() {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        for (let i = 0; i < drops.length; i++) {
+          const char = chars[Math.floor(Math.random() * chars.length)];
+          const x = i * fontSize;
+          const y = drops[i] * fontSize;
+
+          const pinkShade = Math.random();
+          if (pinkShade > 0.7) {
+            ctx.fillStyle = '#ff69b4';
+          } else if (pinkShade > 0.4) {
+            ctx.fillStyle = '#ff1493';
+          } else {
+            ctx.fillStyle = '#c71585';
+          }
+
+          if (Math.random() > 0.95) {
+            ctx.fillStyle = '#ffb6c1';
+            ctx.shadowColor = '#ff69b4';
+            ctx.shadowBlur = 15;
+          } else {
+            ctx.shadowBlur = 0;
+          }
+
+          ctx.font = fontSize + 'px monospace';
+          ctx.fillText(char, x, y);
+          ctx.shadowBlur = 0;
+
+          if (y > canvas.height && Math.random() > 0.975) {
+            drops[i] = 0;
+          }
+          drops[i]++;
+        }
+
+        matrixAnimId = requestAnimationFrame(drawMatrix);
+      }
+
+      drawMatrix();
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       COUNTDOWN SEQUENCE
+    ═══════════════════════════════════════════════════════ */
+    function runCountdown() {
+      const display = document.getElementById('countdown-display');
+      const sequence = [
+        { text: '3', className: 'countdown-number', delay: 1000 },
+        { text: '2', className: 'countdown-number', delay: 1800 },
+        { text: '1', className: 'countdown-number', delay: 2600 },
+        { text: 'FELIZ', className: 'countdown-word', delay: 3600 },
+        { text: 'CUMPLEAÑOS', className: 'countdown-word', delay: 5000 },
+        { text: 'PARA', className: 'countdown-word', delay: 6500 },
+        { text: 'MICHELLE', className: 'countdown-name', delay: 7800 },
+      ];
+
+      sequence.forEach((item, index) => {
+        setTimeout(() => {
+          display.textContent = item.text;
+          display.className = 'countdown-text ' + item.className;
+          void display.offsetWidth;
+          display.classList.add('show');
+        }, item.delay);
+
+        const hideDelay = index < sequence.length - 1
+          ? item.delay + 800
+          : item.delay + 2500;
+
+        setTimeout(() => {
+          display.classList.remove('show');
+          display.classList.add('hide');
+        }, hideDelay);
+      });
+
+      // Transition to cat scene
+      setTimeout(() => {
+        if (matrixAnimId) cancelAnimationFrame(matrixAnimId);
+        showScene('cat-scene');
+        launchEmojis(30);
+        createSparkles(document.getElementById('cat-scene'), 20);
+      }, 11000);
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       SCENE 2: CAT SCENE CLICK HANDLER
+    ═══════════════════════════════════════════════════════ */
+    function initCatScene() {
+      const catScene = document.getElementById('cat-scene');
+      let transitioned = false;
+
+      function goToAlbum() {
+        if (transitioned) return;
+        transitioned = true;
+        showScene('album-scene');
+        initAlbumInteraction();
+      }
+
+      catScene.addEventListener('click', goToAlbum);
+      catScene.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        goToAlbum();
+      });
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       SCENE 3: INTERACTIVE ALBUM
+    ═══════════════════════════════════════════════════════ */
+    function buildAlbumCards() {
+      const stack = document.getElementById('photo-stack');
+      const dotsContainer = document.getElementById('dots-indicator');
+
+      ALBUM_PHOTOS.forEach((photo, index) => {
+        const card = document.createElement('div');
+        card.className = 'photo-card';
+        card.style.zIndex = ALBUM_PHOTOS.length - index;
+        card.dataset.index = index;
+
+        const imgDiv = document.createElement('div');
+        imgDiv.className = 'photo-img';
+
+        if (photo.src) {
+          const img = document.createElement('img');
+          img.src = photo.src;
+          img.alt = photo.caption;
+          img.draggable = false;
+          imgDiv.appendChild(img);
+        }
+
+        const caption = document.createElement('div');
+        caption.className = 'photo-caption';
+        caption.textContent = photo.caption;
+
+        card.appendChild(imgDiv);
+        card.appendChild(caption);
+        stack.appendChild(card);
+
+        const dot = document.createElement('div');
+        dot.className = 'dot' + (index === 0 ? ' active' : '');
+        dotsContainer.appendChild(dot);
+      });
+    }
+
+    function initAlbumInteraction() {
+      const stack = document.getElementById('photo-stack');
+      const cards = stack.querySelectorAll('.photo-card');
+      const dots = document.querySelectorAll('.dot');
+      const nextBtn = document.getElementById('album-next-btn');
+      let currentCard = 0;
+      let startX = 0;
+      let startY = 0;
+      let currentX = 0;
+      let isDragging = false;
+
+      function updateDots() {
+        dots.forEach((dot, i) => {
+          dot.classList.toggle('active', i === currentCard);
+        });
+      }
+
+      function handleStart(x, y) {
+        if (currentCard >= cards.length) return;
+        isDragging = true;
+        startX = x;
+        startY = y;
+        currentX = 0;
+        cards[currentCard].style.transition = 'none';
+      }
+
+      function handleMove(x, y) {
+        if (!isDragging || currentCard >= cards.length) return;
+        currentX = x - startX;
+        const rotation = currentX * 0.1;
+        const opacity = Math.max(0, 1 - Math.abs(currentX) / 300);
+        cards[currentCard].style.transform =
+          `translateX(${currentX}px) rotate(${rotation}deg)`;
+        cards[currentCard].style.opacity = opacity;
+      }
+
+      function handleEnd() {
+        if (!isDragging || currentCard >= cards.length) return;
+        isDragging = false;
+        const card = cards[currentCard];
+
+        if (Math.abs(currentX) > 100) {
+          const direction = currentX > 0 ? 1 : -1;
+          card.style.transition = 'transform 0.5s ease, opacity 0.5s ease';
+          card.style.transform = `translateX(${direction * window.innerWidth}px) rotate(${direction * 30}deg)`;
+          card.style.opacity = '0';
+          currentCard++;
+          updateDots();
+
+          if (currentCard >= cards.length) {
+            setTimeout(() => {
+              showScene('collage-scene');
+              initCollage();
+              launchEmojis(25);
+            }, 300);
+          }
+        } else {
+          card.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease';
+          card.style.transform = 'translateX(0) rotate(0deg)';
+          card.style.opacity = '1';
+        }
+      }
+
+      stack.addEventListener('touchstart', (e) => {
+        const touch = e.touches[0];
+        handleStart(touch.clientX, touch.clientY);
+      }, { passive: true });
+
+      stack.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        const touch = e.touches[0];
+        handleMove(touch.clientX, touch.clientY);
+      }, { passive: false });
+
+      stack.addEventListener('touchend', () => handleEnd());
+
+      stack.addEventListener('mousedown', (e) => {
+        handleStart(e.clientX, e.clientY);
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        handleMove(e.clientX, e.clientY);
+      });
+
+      window.addEventListener('mouseup', () => handleEnd());
+
+      nextBtn.addEventListener('click', () => {
+        showScene('collage-scene');
+        initCollage();
+        launchEmojis(25);
+      });
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       SCENE 4: HEART ⇄ 25 MORPHING COLLAGE (EVERY 4 SECONDS)
+    ═══════════════════════════════════════════════════════ */
+    let currentCollageShape = 'heart';
+    let morphIntervalId = null;
+    let collageCardElements = [];
+
+    function calculateHeartPoints(W, H, cardW, cardH) {
+      const centerX = W / 2;
+      const centerY = H / 2;
+      const scale = Math.min(W, H) / 40;
+      const totalPerimeter = 18;
+      const points = [];
+
+      for (let i = 0; i < totalPerimeter; i++) {
+        const t = (i / totalPerimeter) * Math.PI * 2;
+        const x = 16 * Math.pow(Math.sin(t), 3);
+        const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+        points.push({
+          x: centerX + x * scale - cardW / 2,
+          y: centerY + (y - 0.5) * scale - cardH / 2,
+          rot: -7 + Math.random() * 14
+        });
+      }
+
+      // 2 center cards so heart is full
+      points.push({
+        x: centerX - cardW / 2,
+        y: centerY - 1.8 * scale - cardH / 2,
+        rot: -3 + Math.random() * 6
+      });
+      points.push({
+        x: centerX - cardW / 2,
+        y: centerY + 1.2 * scale - cardH / 2,
+        rot: -4 + Math.random() * 8
+      });
+
+      return points;
+    }
+
+    function calculate25Points(W, H, cardW, cardH) {
+      const centerX = W / 2;
+      const centerY = H / 2;
+      const s = Math.min(W, H) / 38;
+      const dx2 = centerX - Math.min(W * 0.22, 110);
+      const dx5 = centerX + Math.min(W * 0.22, 110);
+      const points = [];
+
+      // Digit "2" - 10 cards
+      const coords2 = [
+        { x: -7.5 * s, y: -9 * s },
+        { x: -5 * s, y: -13 * s },
+        { x: 1 * s, y: -14.5 * s },
+        { x: 7 * s, y: -11 * s },
+        { x: 6.5 * s, y: -4 * s },
+        { x: 1 * s, y: 1.5 * s },
+        { x: -4 * s, y: 7 * s },
+        { x: -7.5 * s, y: 12.5 * s },
+        { x: 0 * s, y: 13.5 * s },
+        { x: 7.5 * s, y: 13.5 * s }
+      ];
+
+      coords2.forEach(c => {
+        points.push({
+          x: dx2 + c.x - cardW / 2,
+          y: centerY + c.y - cardH / 2,
+          rot: -5 + Math.random() * 10
+        });
+      });
+
+      // Digit "5" - 10 cards
+      const coords5 = [
+        { x: 7.5 * s, y: -14.5 * s },
+        { x: 0 * s, y: -14.5 * s },
+        { x: -7 * s, y: -14.5 * s },
+        { x: -6.5 * s, y: -7.5 * s },
+        { x: -4 * s, y: -0.5 * s },
+        { x: 3.5 * s, y: 0.5 * s },
+        { x: 8 * s, y: 6.5 * s },
+        { x: 5.5 * s, y: 12.5 * s },
+        { x: -1 * s, y: 14 * s },
+        { x: -6.5 * s, y: 12 * s }
+      ];
+
+      coords5.forEach(c => {
+        points.push({
+          x: dx5 + c.x - cardW / 2,
+          y: centerY + c.y - cardH / 2,
+          rot: -5 + Math.random() * 10
+        });
+      });
+
+      return points;
+    }
+
+    function applyCollageShape(shapeName) {
+      const container = document.getElementById('collage-container');
+      const title = document.getElementById('collage-title');
+      const W = container.clientWidth;
+      const H = container.clientHeight;
+      const cardW = Math.min(Math.max(50, W * 0.135), 76);
+      const cardH = cardW;
+
+      currentCollageShape = shapeName;
+      const points = (shapeName === 'heart')
+        ? calculateHeartPoints(W, H, cardW, cardH)
+        : calculate25Points(W, H, cardW, cardH);
+
+      collageCardElements.forEach((div, index) => {
+        const pt = points[index % points.length];
+        div.style.left = pt.x + 'px';
+        div.style.top = pt.y + 'px';
+        div.style.setProperty('--rot', pt.rot + 'deg');
+      });
+
+      title.style.opacity = '0';
+      title.style.transform = 'translateY(15px)';
+      setTimeout(() => {
+        if (shapeName === 'heart') {
+          title.innerHTML = '¡Que sean muchos más! 🥳🎉<br>Michelle 🎂';
+        } else {
+          title.innerHTML = '¡Felices 25 Michelle! 🎂✨<br>25 años increíbles 🌸';
+        }
+        title.style.opacity = '1';
+        title.style.transform = 'translateY(0)';
+      }, 350);
+    }
+
+    function openPhotoModal(src) {
+      const modal = document.getElementById('photo-modal');
+      const modalImg = document.getElementById('modal-img');
+      modalImg.src = src;
+      modal.classList.add('open');
+    }
+
+    function closePhotoModal() {
+      const modal = document.getElementById('photo-modal');
+      modal.classList.remove('open');
+    }
+
+    function initCollage() {
+      const container = document.getElementById('collage-container');
+      const title = document.getElementById('collage-title');
+      container.innerHTML = '';
+      collageCardElements = [];
+      if (morphIntervalId) clearInterval(morphIntervalId);
+
+      const W = container.clientWidth;
+      const H = container.clientHeight;
+      const cardW = Math.min(Math.max(50, W * 0.135), 76);
+      const cardH = cardW;
+
+      const heartPoints = calculateHeartPoints(W, H, cardW, cardH);
+
+      heartPoints.forEach((pt, index) => {
+        const div = document.createElement('div');
+        div.className = 'collage-photo';
+        div.style.width = cardW + 'px';
+        div.style.height = cardH + 'px';
+        div.style.left = pt.x + 'px';
+        div.style.top = pt.y + 'px';
+        div.style.setProperty('--rot', pt.rot + 'deg');
+        div.style.zIndex = (index >= 18) ? 15 : (5 + (index % 6));
+
+        const imgSrc = COLLAGE_PHOTOS[index % COLLAGE_PHOTOS.length];
+        const img = document.createElement('img');
+        img.className = 'collage-img';
+        img.src = imgSrc;
+        img.alt = 'Foto de Michelle';
+        img.draggable = false;
+        div.appendChild(img);
+
+        // Tap/click to view photo enlarged
+        div.addEventListener('click', () => openPhotoModal(imgSrc));
+
+        container.appendChild(div);
+        collageCardElements.push(div);
+
+        setTimeout(() => {
+          div.classList.add('show');
+        }, 20 + index * 60);
+      });
+
+      // Show title after photos finish opening
+      setTimeout(() => {
+        title.classList.add('show');
+      }, 20 + heartPoints.length * 60 + 150);
+
+      // Start automatic 4-second morphing between Heart and 25
+      currentCollageShape = 'heart';
+      morphIntervalId = setInterval(() => {
+        const nextShape = (currentCollageShape === 'heart') ? '25' : 'heart';
+        applyCollageShape(nextShape);
+      }, 4000);
+
+      // Modal close listeners
+      const modalClose = document.getElementById('modal-close');
+      const modalBackdrop = document.getElementById('modal-backdrop');
+      if (modalClose) modalClose.onclick = closePhotoModal;
+      if (modalBackdrop) modalBackdrop.onclick = closePhotoModal;
+
+      // Continuous floating emojis
+      setInterval(() => launchEmojis(5), 4000);
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       INITIALIZATION
+    ═══════════════════════════════════════════════════════ */
+    function init() {
+      generateStars('stars-bg-cat', 150);
+      generateStars('stars-bg-album', 150);
+      generateStars('stars-bg-collage', 150);
+
+      buildAlbumCards();
+      initCatScene();
+
+      // Audio toggle button
+      document.getElementById('audio-btn').addEventListener('click', toggleMusic);
+
+      // Start button handler
+      document.getElementById('start-btn').addEventListener('click', () => {
+        document.getElementById('start-screen').classList.add('hidden');
+        showScene('matrix-scene');
+        initMatrix();
+        startMusic();
+
+        setTimeout(() => {
+          runCountdown();
+        }, 500);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+
+</html>
