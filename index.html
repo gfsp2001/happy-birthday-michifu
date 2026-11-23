@@ -325,10 +325,13 @@
     }
 
     /* ═══════════════════════════════════════════════════════
-       SCENE 3: INTERACTIVE ALBUM
+       SCENE 3: 3D TWO-PAGE FLIPBOOK PHOTO ALBUM
     ═══════════════════════════════════════════════════════ */
     #album-scene {
       flex-direction: column;
+      overflow: hidden;
+      justify-content: center;
+      align-items: center;
     }
 
     .album-wrapper {
@@ -336,158 +339,464 @@
       z-index: 5;
       width: 100%;
       height: 100%;
+      max-width: 760px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      padding: 8px 12px;
+      box-sizing: border-box;
     }
 
     .album-message {
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(255, 255, 255, 0.96);
       border-radius: 25px;
-      padding: 12px 30px;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      padding: 6px 20px;
+      margin-bottom: 8px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
       text-align: center;
       z-index: 10;
     }
 
     .album-message p {
       font-family: 'Satisfy', cursive;
-      font-size: clamp(18px, 4vw, 28px);
+      font-size: clamp(16px, 3.6vw, 22px);
       color: #333;
+      margin: 0;
     }
 
     .album-message .emoji-icon {
       color: #ff69b4;
     }
 
-    .photo-stack {
+    /* 3D BOOK STYLES */
+    .book-container {
       position: relative;
-      width: clamp(260px, 70vw, 400px);
-      height: clamp(340px, 60vh, 500px);
-      perspective: 1000px;
-    }
-
-    .photo-card {
-      position: absolute;
-      inset: 0;
-      background: #fff;
-      border-radius: 8px;
-      padding: 15px 15px 50px 15px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-      cursor: grab;
-      transition: transform 0.3s ease;
-      will-change: transform;
-      touch-action: none;
-    }
-
-    .photo-card:active {
-      cursor: grabbing;
-    }
-
-    .photo-card .photo-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 4px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      width: clamp(310px, 92vw, 640px);
+      height: clamp(230px, 46vh, 400px);
+      perspective: 1800px;
+      perspective-origin: 50% 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #fff;
-      font-size: 14px;
-      text-align: center;
+      margin: 4px auto;
+    }
+
+    .book {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .book.closed {
+      transform: translateX(-25%);
+    }
+
+    .book.open {
+      transform: translateX(0);
+    }
+
+    /* Spine Crease & Book Under-shadow */
+    .book-spine-line {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 14px;
+      transform: translateX(-50%);
+      background: linear-gradient(to right, rgba(0,0,0,0.22), rgba(0,0,0,0.03) 35%, rgba(255,255,255,0.2) 50%, rgba(0,0,0,0.03) 65%, rgba(0,0,0,0.22));
+      z-index: 45;
+      pointer-events: none;
+    }
+
+    .book-base {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      width: 50%;
+      background: #faf7f5;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
       overflow: hidden;
     }
 
-    .photo-card .photo-img img {
+    .book-base-left {
+      left: 0;
+      border-radius: 12px 3px 3px 12px;
+      border-left: 4px solid #ad1457;
+      box-shadow: inset -16px 0 22px rgba(0,0,0,0.1), 0 12px 30px rgba(0,0,0,0.4);
+    }
+
+    .book-base-right {
+      left: 50%;
+      border-radius: 3px 12px 12px 3px;
+      border-right: 4px solid #ad1457;
+      box-shadow: inset 16px 0 22px rgba(0,0,0,0.1), 0 12px 30px rgba(0,0,0,0.4);
+    }
+
+    .book-inner-lining {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #fce4ec, #f8bbd0);
+      color: #ad1457;
+      text-align: center;
+      padding: 16px;
+      box-sizing: border-box;
+    }
+
+    .lining-icon {
+      font-size: clamp(28px, 6vw, 42px);
+      margin-bottom: 6px;
+    }
+
+    .lining-text {
+      font-family: 'Satisfy', cursive;
+      font-size: clamp(14px, 3.2vw, 20px);
+      color: #880e4f;
+      margin: 0;
+    }
+
+    .lining-badge {
+      margin-top: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #c2185b;
+      background: rgba(255, 255, 255, 0.6);
+      padding: 3px 10px;
+      border-radius: 10px;
+    }
+
+    /* 3D Flappable Leaves */
+    .book-leaf {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 50%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transform-origin: left center;
+      transition: transform 0.75s cubic-bezier(0.25, 1, 0.5, 1);
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .book-leaf.flipped {
+      transform: rotateY(-180deg);
+    }
+
+    .page-face {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+    }
+
+    .page-front {
+      transform: rotateY(0deg);
+      border-radius: 2px 12px 12px 2px;
+      border-right: 2px solid #e8e0e4;
+      background: #ffffff;
+      box-shadow: inset 18px 0 22px rgba(0, 0, 0, 0.08), 0 6px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .page-back {
+      transform: rotateY(180deg);
+      border-radius: 12px 2px 2px 12px;
+      border-left: 2px solid #e8e0e4;
+      background: #ffffff;
+      box-shadow: inset -18px 0 22px rgba(0, 0, 0, 0.08), 0 6px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    /* Cover Page Styling */
+    .cover-face {
+      background: linear-gradient(135deg, #e91e63 0%, #c2185b 50%, #880e4f 100%);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 14px 10px;
+      border: 3px solid rgba(255, 215, 0, 0.6);
+      outline: 1px solid rgba(255, 215, 0, 0.35);
+      outline-offset: -5px;
+      box-shadow: inset 0 0 25px rgba(0,0,0,0.35), 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .cover-badge {
+      font-size: clamp(32px, 7vw, 46px);
+      margin-bottom: 6px;
+      filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3));
+    }
+
+    .cover-title {
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(20px, 4.6vw, 32px);
+      margin-bottom: 4px;
+      color: #fff;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+
+    .cover-sub {
+      font-size: clamp(11px, 2.6vw, 14px);
+      opacity: 0.95;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: #ffd6ea;
+      margin-bottom: 12px;
+    }
+
+    .cover-hint {
+      background: rgba(255, 255, 255, 0.25);
+      border: 1px dashed rgba(255, 255, 255, 0.7);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: clamp(11px, 2.4vw, 13px);
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+
+    /* Photo Page Styling */
+    .photo-page-content {
+      width: 100%;
+      height: 100%;
+      padding: 7px 7px 18px 7px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #faf8f7;
+      position: relative;
+      box-sizing: border-box;
+    }
+
+    .photo-frame {
+      width: 100%;
+      flex: 1;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #f0f0f0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .photo-frame img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      display: block;
     }
 
-    .photo-card .photo-caption {
-      position: absolute;
-      bottom: 15px;
-      left: 15px;
-      right: 15px;
-      text-align: center;
+    .page-caption {
+      margin-top: 5px;
       font-family: 'Satisfy', cursive;
-      font-size: 16px;
-      color: #555;
+      font-size: clamp(11px, 2.6vw, 16px);
+      color: #333;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 95%;
+    }
+
+    .page-number-tag {
+      position: absolute;
+      bottom: 4px;
+      font-size: 10px;
+      color: #999;
+      font-weight: 600;
+    }
+
+    .page-front .page-number-tag {
+      right: 8px;
+    }
+
+    .page-back .page-number-tag {
+      left: 8px;
+    }
+
+    .page-zoom-hint {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: rgba(0, 0, 0, 0.45);
+      color: #fff;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      backdrop-filter: blur(4px);
+      opacity: 0.85;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .page-zoom-hint:hover {
+      transform: scale(1.15);
+      opacity: 1;
+    }
+
+    /* Final Surprise Page */
+    .final-page-content {
+      background: linear-gradient(135deg, #1f0b29 0%, #3a1142 100%);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 14px 10px;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+    }
+
+    .final-page-title {
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(15px, 3.4vw, 22px);
+      color: #ff80ab;
+      margin-bottom: 5px;
+    }
+
+    .final-page-text {
+      font-size: clamp(11px, 2.3vw, 13px);
+      color: rgba(255, 255, 255, 0.88);
+      margin-bottom: 12px;
+      line-height: 1.4;
+      padding: 0 4px;
+    }
+
+    .final-page-btn {
+      background: linear-gradient(135deg, #ff4081, #ff1744);
+      color: #fff;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 50px;
+      font-size: clamp(12px, 2.5vw, 14px);
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 18px rgba(255, 23, 68, 0.65);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .final-page-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 22px rgba(255, 23, 68, 0.8);
+    }
+
+    /* Navigation Buttons */
+    .book-nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.45);
+      color: #fff;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 55;
+      backdrop-filter: blur(8px);
+      transition: all 0.2s;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .book-nav-btn:hover {
+      background: rgba(255, 105, 180, 0.7);
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .book-nav-btn:disabled {
+      opacity: 0.25;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .prev-btn {
+      left: -14px;
+    }
+
+    .next-btn {
+      right: -14px;
+    }
+
+    .book-controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      margin-top: 8px;
+      z-index: 20;
+    }
+
+    .page-counter {
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 12px;
+      font-weight: 600;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 3px 14px;
+      border-radius: 12px;
+      backdrop-filter: blur(4px);
     }
 
     .swipe-indicator {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      color: rgba(255, 255, 255, 0.5);
-      font-size: 13px;
+      margin-top: 3px;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 11px;
       z-index: 15;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       animation: swipeHint 2s ease-in-out infinite;
     }
 
     @keyframes swipeHint {
-
-      0%,
-      100% {
-        transform: translateX(-50%);
-      }
-
-      50% {
-        transform: translateX(-30%);
-      }
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(-6px); }
     }
 
     .dots-indicator {
       display: flex;
-      gap: 8px;
-      margin-top: 20px;
+      gap: 6px;
       z-index: 15;
+      align-items: center;
     }
 
     .dot {
-      width: 8px;
-      height: 8px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.35);
+      cursor: pointer;
       transition: all 0.3s ease;
     }
 
     .dot.active {
-      background: #ff69b4;
-      transform: scale(1.3);
-      box-shadow: 0 0 10px rgba(255, 105, 180, 0.6);
-    }
-
-    .album-next-btn {
-      position: absolute;
-      bottom: 50px;
-      right: 30px;
-      background: rgba(255, 105, 180, 0.3);
-      border: 1px solid rgba(255, 105, 180, 0.5);
-      color: #ff69b4;
-      padding: 10px 20px;
-      border-radius: 25px;
-      cursor: pointer;
-      font-family: 'Poppins', sans-serif;
-      font-size: 14px;
-      z-index: 20;
-      transition: all 0.3s ease;
-      display: none;
-    }
-
-    .album-next-btn.visible {
-      display: block;
-    }
-
-    .album-next-btn:hover {
-      background: rgba(255, 105, 180, 0.5);
+      background: #ff4081;
+      width: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(255, 64, 129, 0.7);
     }
 
     /* ═══════════════════════════════════════════════════════
@@ -868,7 +1177,7 @@
   </div>
 
   <!-- ═══════════════════════════════════════════════════════
-       SCENE 3: INTERACTIVE ALBUM
+       SCENE 3: 3D FLIPBOOK PHOTO ALBUM
   ═══════════════════════════════════════════════════════ -->
   <div id="album-scene" class="scene">
     <div class="stars-bg" id="stars-bg-album"></div>
@@ -876,15 +1185,26 @@
       <div class="album-message">
         <p>Feliz Cumpleaños Michelle <span class="emoji-icon">🎂</span></p>
       </div>
-      <div class="photo-stack" id="photo-stack">
-        <!-- Cards injected by JS -->
+
+      <!-- 3D FLIPBOOK CONTAINER -->
+      <div class="book-container" id="book-container">
+        <div class="book closed" id="book">
+          <!-- 3D Book leaves injected by JS -->
+        </div>
+        
+        <!-- Navigation Controls -->
+        <button class="book-nav-btn prev-btn" id="book-prev-btn" title="Página anterior" disabled>❮</button>
+        <button class="book-nav-btn next-btn" id="book-next-btn" title="Página siguiente">❯</button>
       </div>
-      <div class="dots-indicator" id="dots-indicator"></div>
-      <div class="swipe-indicator">
-        <span>👆 Desliza para ver más</span>
+
+      <div class="book-controls">
+        <div class="page-counter" id="page-counter">Portada 📖 (Toca para abrir)</div>
+        <div class="dots-indicator" id="dots-indicator"></div>
+        <div class="swipe-indicator">
+          <span>👈 Desliza con el dedo para pasar página 👉</span>
+        </div>
       </div>
     </div>
-    <button class="album-next-btn" id="album-next-btn">Ver collage 🌟</button>
   </div>
 
   <!-- ═══════════════════════════════════════════════════════
@@ -1161,7 +1481,7 @@
         if (transitioned) return;
         transitioned = true;
         showScene('album-scene');
-        initAlbumInteraction();
+        flipTo(0);
       }
 
       catScene.addEventListener('click', goToAlbum);
@@ -1172,133 +1492,394 @@
     }
 
     /* ═══════════════════════════════════════════════════════
-       SCENE 3: INTERACTIVE ALBUM
+       SCENE 3: 3D TWO-PAGE FLIPBOOK PHOTO ALBUM
     ═══════════════════════════════════════════════════════ */
-    function buildAlbumCards() {
-      const stack = document.getElementById('photo-stack');
+    let currentSpread = 0; // 0: Portada, 1: Págs 1-2, 2: Págs 3-4, 3: Págs 5-6, 4: Págs 7-8, 5: Págs 9-10, 6: Sorpresa Final
+    const totalSpreads = 7;
+    let bookLeaves = [];
+    let isFlipping = false;
+
+    function createPhotoFace(photo, isFront, pageNumber) {
+      const face = document.createElement('div');
+      face.className = `page-face ${isFront ? 'page-front' : 'page-back'}`;
+
+      const content = document.createElement('div');
+      content.className = 'photo-page-content';
+
+      const frame = document.createElement('div');
+      frame.className = 'photo-frame';
+
+      const img = document.createElement('img');
+      img.src = photo.src;
+      img.alt = photo.caption;
+      img.draggable = false;
+      frame.appendChild(img);
+
+      // Tap-to-zoom button
+      const zoomHint = document.createElement('div');
+      zoomHint.className = 'page-zoom-hint';
+      zoomHint.innerHTML = '🔍';
+      zoomHint.title = 'Toca para ampliar foto';
+      zoomHint.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openPhotoModal(photo.src);
+      });
+      frame.appendChild(zoomHint);
+
+      // Tapping frame directly enlarges photo
+      frame.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openPhotoModal(photo.src);
+      });
+
+      const caption = document.createElement('div');
+      caption.className = 'page-caption';
+      caption.textContent = photo.caption;
+
+      const numTag = document.createElement('div');
+      numTag.className = 'page-number-tag';
+      numTag.textContent = `Pág ${pageNumber}`;
+
+      content.appendChild(frame);
+      content.appendChild(caption);
+      content.appendChild(numTag);
+      face.appendChild(content);
+
+      return face;
+    }
+
+    function buildBookAlbum() {
+      const book = document.getElementById('book');
       const dotsContainer = document.getElementById('dots-indicator');
+      if (!book) return;
 
-      ALBUM_PHOTOS.forEach((photo, index) => {
-        const card = document.createElement('div');
-        card.className = 'photo-card';
-        card.style.zIndex = ALBUM_PHOTOS.length - index;
-        card.dataset.index = index;
+      book.innerHTML = '';
+      bookLeaves = [];
+      currentSpread = 0;
 
-        const imgDiv = document.createElement('div');
-        imgDiv.className = 'photo-img';
+      // 1. Static Left Base (Inside lining when opened)
+      const baseLeft = document.createElement('div');
+      baseLeft.className = 'book-base book-base-left';
+      baseLeft.innerHTML = `
+        <div class="book-inner-lining">
+          <div class="lining-icon">🌸</div>
+          <p class="lining-text">Recuerdos con Michelle ✨</p>
+          <span class="lining-badge">25 Años Inolvidables</span>
+        </div>
+      `;
+      book.appendChild(baseLeft);
 
-        if (photo.src) {
-          const img = document.createElement('img');
-          img.src = photo.src;
-          img.alt = photo.caption;
-          img.draggable = false;
-          imgDiv.appendChild(img);
+      // 2. Static Right Base (Final Surprise page when last leaf is flipped)
+      const baseRight = document.createElement('div');
+      baseRight.className = 'book-base book-base-right';
+      baseRight.innerHTML = `
+        <div class="final-page-content">
+          <span style="font-size:clamp(28px, 6vw, 38px); margin-bottom:4px;">🎁</span>
+          <div class="final-page-title">¡Una Sorpresa Más!</div>
+          <div class="final-page-text">
+            Michelle, aquí no termina todo... Descubre el mosaico mágico con todas tus fotos juntas en forma de corazón y el número 25 ✨
+          </div>
+          <button class="final-page-btn" id="final-to-collage-btn">Ver Mosaico Mágico 💖</button>
+        </div>
+      `;
+      book.appendChild(baseRight);
+
+      // 3. Central Spine Line
+      const spine = document.createElement('div');
+      spine.className = 'book-spine-line';
+      book.appendChild(spine);
+
+      // 4. Create 6 3D Leaves (Leaf 0 to 5)
+      // Leaf 0: Front = Portada, Back = Foto 1
+      const leaf0 = document.createElement('div');
+      leaf0.className = 'book-leaf';
+
+      const front0 = document.createElement('div');
+      front0.className = 'page-face page-front cover-face';
+      front0.innerHTML = `
+        <div class="cover-badge">🎂</div>
+        <div class="cover-title">Michelle</div>
+        <div class="cover-sub">25 AÑOS • ÁLBUM DE RECUERDOS</div>
+        <div class="cover-hint">👉 Desliza o toca para abrir</div>
+      `;
+      const back0 = createPhotoFace(ALBUM_PHOTOS[0], false, 1);
+      leaf0.appendChild(front0);
+      leaf0.appendChild(back0);
+      book.appendChild(leaf0);
+      bookLeaves.push(leaf0);
+
+      // Leaf 1: Front = Foto 2, Back = Foto 3
+      const leaf1 = document.createElement('div');
+      leaf1.className = 'book-leaf';
+      leaf1.appendChild(createPhotoFace(ALBUM_PHOTOS[1], true, 2));
+      leaf1.appendChild(createPhotoFace(ALBUM_PHOTOS[2], false, 3));
+      book.appendChild(leaf1);
+      bookLeaves.push(leaf1);
+
+      // Leaf 2: Front = Foto 4, Back = Foto 5
+      const leaf2 = document.createElement('div');
+      leaf2.className = 'book-leaf';
+      leaf2.appendChild(createPhotoFace(ALBUM_PHOTOS[3], true, 4));
+      leaf2.appendChild(createPhotoFace(ALBUM_PHOTOS[4], false, 5));
+      book.appendChild(leaf2);
+      bookLeaves.push(leaf2);
+
+      // Leaf 3: Front = Foto 6, Back = Foto 7
+      const leaf3 = document.createElement('div');
+      leaf3.className = 'book-leaf';
+      leaf3.appendChild(createPhotoFace(ALBUM_PHOTOS[5], true, 6));
+      leaf3.appendChild(createPhotoFace(ALBUM_PHOTOS[6], false, 7));
+      book.appendChild(leaf3);
+      bookLeaves.push(leaf3);
+
+      // Leaf 4: Front = Foto 8, Back = Foto 9
+      const leaf4 = document.createElement('div');
+      leaf4.className = 'book-leaf';
+      leaf4.appendChild(createPhotoFace(ALBUM_PHOTOS[7], true, 8));
+      leaf4.appendChild(createPhotoFace(ALBUM_PHOTOS[8], false, 9));
+      book.appendChild(leaf4);
+      bookLeaves.push(leaf4);
+
+      // Leaf 5: Front = Foto 10, Back = Mensaje Final
+      const leaf5 = document.createElement('div');
+      leaf5.className = 'book-leaf';
+      leaf5.appendChild(createPhotoFace(ALBUM_PHOTOS[9], true, 10));
+
+      const back5 = document.createElement('div');
+      back5.className = 'page-face page-back';
+      back5.innerHTML = `
+        <div class="photo-page-content" style="background:#fff7fa; justify-content:center; text-align:center; padding:16px;">
+          <div style="font-size:clamp(30px, 6vw, 42px); margin-bottom:6px;">✨</div>
+          <div style="font-family:'Pacifico', cursive; font-size:clamp(16px, 3.6vw, 24px); color:#c2185b; margin-bottom:8px;">
+            ¡Felices 25 Años!
+          </div>
+          <p style="font-family:'Satisfy', cursive; font-size:clamp(13px, 2.8vw, 17px); color:#444; line-height:1.45; margin:0 0 10px 0;">
+            Que cada día de este nuevo año te traiga sonrisas, momentos mágicos y toda la felicidad que mereces. ¡Sigue brillando como siempre! 🌸💖
+          </p>
+          <span style="font-size:11px; font-weight:700; color:#ad1457; letter-spacing:1px;">MICHELLE • 2026</span>
+          <div class="page-number-tag" style="left:8px;">Fin</div>
+        </div>
+      `;
+      leaf5.appendChild(back5);
+      book.appendChild(leaf5);
+      bookLeaves.push(leaf5);
+
+      // Set initial natural z-indices (Leaf 0 on top on right)
+      bookLeaves.forEach((leaf, idx) => {
+        leaf.style.zIndex = (bookLeaves.length - idx) * 2;
+      });
+
+      // 5. Generate Dots Indicator
+      if (dotsContainer) {
+        dotsContainer.innerHTML = '';
+        for (let i = 0; i < totalSpreads; i++) {
+          const dot = document.createElement('div');
+          dot.className = 'dot' + (i === 0 ? ' active' : '');
+          dot.title = (i === 0) ? 'Portada' : (i === 6 ? 'Sorpresa Final' : `Páginas ${i * 2 - 1}-${i * 2}`);
+          dot.addEventListener('click', (e) => {
+            e.stopPropagation();
+            flipTo(i);
+          });
+          dotsContainer.appendChild(dot);
         }
+      }
 
-        const caption = document.createElement('div');
-        caption.className = 'photo-caption';
-        caption.textContent = photo.caption;
+      // Initial Spread state
+      updateSpreadUI(0);
+    }
 
-        card.appendChild(imgDiv);
-        card.appendChild(caption);
-        stack.appendChild(card);
+    function updateSpreadUI(targetSpread) {
+      const book = document.getElementById('book');
+      const counter = document.getElementById('page-counter');
+      const prevBtn = document.getElementById('book-prev-btn');
+      const dots = document.querySelectorAll('.dots-indicator .dot');
 
-        const dot = document.createElement('div');
-        dot.className = 'dot' + (index === 0 ? ' active' : '');
-        dotsContainer.appendChild(dot);
+      if (!book) return;
+
+      if (targetSpread === 0) {
+        book.classList.add('closed');
+        book.classList.remove('open');
+        if (counter) counter.textContent = 'Portada 📖 (Toca o desliza para abrir)';
+        if (prevBtn) prevBtn.disabled = true;
+      } else {
+        book.classList.remove('closed');
+        book.classList.add('open');
+        if (prevBtn) prevBtn.disabled = false;
+
+        if (counter) {
+          if (targetSpread === 1) counter.textContent = 'Páginas 1 - 2 de 10';
+          else if (targetSpread === 2) counter.textContent = 'Páginas 3 - 4 de 10';
+          else if (targetSpread === 3) counter.textContent = 'Páginas 5 - 6 de 10';
+          else if (targetSpread === 4) counter.textContent = 'Páginas 7 - 8 de 10';
+          else if (targetSpread === 5) counter.textContent = 'Páginas 9 - 10 de 10';
+          else if (targetSpread === 6) counter.textContent = 'Sorpresa Final 🎁';
+        }
+      }
+
+      dots.forEach((dot, idx) => {
+        dot.classList.toggle('active', idx === targetSpread);
       });
     }
 
-    function initAlbumInteraction() {
-      const stack = document.getElementById('photo-stack');
-      const cards = stack.querySelectorAll('.photo-card');
-      const dots = document.querySelectorAll('.dot');
-      const nextBtn = document.getElementById('album-next-btn');
-      let currentCard = 0;
-      let startX = 0;
-      let startY = 0;
-      let currentX = 0;
-      let isDragging = false;
-
-      function updateDots() {
-        dots.forEach((dot, i) => {
-          dot.classList.toggle('active', i === currentCard);
-        });
+    function flipTo(targetSpread) {
+      if (targetSpread < 0) return;
+      if (targetSpread >= totalSpreads) {
+        // User flipped past final spread -> go to Scene 4 (mosaic collage)
+        showScene('collage-scene');
+        initCollage();
+        launchEmojis(30);
+        return;
       }
+      if (targetSpread === currentSpread || isFlipping) return;
 
-      function handleStart(x, y) {
-        if (currentCard >= cards.length) return;
-        isDragging = true;
-        startX = x;
-        startY = y;
-        currentX = 0;
-        cards[currentCard].style.transition = 'none';
-      }
+      isFlipping = true;
+      const movingForward = targetSpread > currentSpread;
+      const oldSpread = currentSpread;
+      currentSpread = targetSpread;
 
-      function handleMove(x, y) {
-        if (!isDragging || currentCard >= cards.length) return;
-        currentX = x - startX;
-        const rotation = currentX * 0.1;
-        const opacity = Math.max(0, 1 - Math.abs(currentX) / 300);
-        cards[currentCard].style.transform =
-          `translateX(${currentX}px) rotate(${rotation}deg)`;
-        cards[currentCard].style.opacity = opacity;
-      }
-
-      function handleEnd() {
-        if (!isDragging || currentCard >= cards.length) return;
-        isDragging = false;
-        const card = cards[currentCard];
-
-        if (Math.abs(currentX) > 100) {
-          const direction = currentX > 0 ? 1 : -1;
-          card.style.transition = 'transform 0.5s ease, opacity 0.5s ease';
-          card.style.transform = `translateX(${direction * window.innerWidth}px) rotate(${direction * 30}deg)`;
-          card.style.opacity = '0';
-          currentCard++;
-          updateDots();
-
-          if (currentCard >= cards.length) {
-            setTimeout(() => {
-              showScene('collage-scene');
-              initCollage();
-              launchEmojis(25);
-            }, 300);
+      // Animate leaves with elevated z-index so they swing above stationary pages
+      if (movingForward) {
+        for (let i = oldSpread; i < targetSpread; i++) {
+          if (bookLeaves[i]) {
+            bookLeaves[i].style.zIndex = 40 + i;
+            bookLeaves[i].classList.add('flipped');
           }
-        } else {
-          card.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease';
-          card.style.transform = 'translateX(0) rotate(0deg)';
-          card.style.opacity = '1';
+        }
+      } else {
+        for (let i = oldSpread - 1; i >= targetSpread; i--) {
+          if (bookLeaves[i]) {
+            bookLeaves[i].style.zIndex = 40 + (bookLeaves.length - i);
+            bookLeaves[i].classList.remove('flipped');
+          }
         }
       }
 
-      stack.addEventListener('touchstart', (e) => {
-        const touch = e.touches[0];
-        handleStart(touch.clientX, touch.clientY);
+      updateSpreadUI(targetSpread);
+
+      // Settle natural z-index stacking after 3D flip animation completes
+      setTimeout(() => {
+        bookLeaves.forEach((leaf, i) => {
+          if (i < currentSpread) {
+            // Resting on left
+            leaf.style.zIndex = (i + 1) * 2;
+          } else {
+            // Resting on right
+            leaf.style.zIndex = (bookLeaves.length - i) * 2;
+          }
+        });
+        isFlipping = false;
+      }, 760);
+    }
+
+    function initBookInteraction() {
+      const container = document.getElementById('book-container');
+      const prevBtn = document.getElementById('book-prev-btn');
+      const nextBtn = document.getElementById('book-next-btn');
+
+      if (prevBtn) {
+        prevBtn.onclick = (e) => {
+          e.stopPropagation();
+          flipTo(currentSpread - 1);
+        };
+      }
+
+      if (nextBtn) {
+        nextBtn.onclick = (e) => {
+          e.stopPropagation();
+          flipTo(currentSpread + 1);
+        };
+      }
+
+      // Touch swipe gestures
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let touchStartTime = 0;
+
+      container.addEventListener('touchstart', (e) => {
+        const t = e.touches[0];
+        touchStartX = t.clientX;
+        touchStartY = t.clientY;
+        touchStartTime = Date.now();
       }, { passive: true });
 
-      stack.addEventListener('touchmove', (e) => {
-        e.preventDefault();
-        const touch = e.touches[0];
-        handleMove(touch.clientX, touch.clientY);
-      }, { passive: false });
+      container.addEventListener('touchend', (e) => {
+        const t = e.changedTouches[0];
+        const dx = t.clientX - touchStartX;
+        const dy = t.clientY - touchStartY;
+        const dt = Date.now() - touchStartTime;
 
-      stack.addEventListener('touchend', () => handleEnd());
+        if (Math.abs(dx) > 35 && Math.abs(dx) > Math.abs(dy) && dt < 600) {
+          if (dx < 0) {
+            // Swipe left -> flip forward
+            flipTo(currentSpread + 1);
+          } else {
+            // Swipe right -> flip backward
+            flipTo(currentSpread - 1);
+          }
+        }
+      }, { passive: true });
 
-      stack.addEventListener('mousedown', (e) => {
-        handleStart(e.clientX, e.clientY);
+      // Mouse drag for desktop
+      let mouseStartX = 0;
+      let isMouseDown = false;
+
+      container.addEventListener('mousedown', (e) => {
+        if (e.target.closest('button') || e.target.closest('.page-zoom-hint')) return;
+        mouseStartX = e.clientX;
+        isMouseDown = true;
       });
 
-      window.addEventListener('mousemove', (e) => {
-        handleMove(e.clientX, e.clientY);
+      window.addEventListener('mouseup', (e) => {
+        if (!isMouseDown) return;
+        isMouseDown = false;
+        const dx = e.clientX - mouseStartX;
+        if (Math.abs(dx) > 40) {
+          if (dx < 0) {
+            flipTo(currentSpread + 1);
+          } else {
+            flipTo(currentSpread - 1);
+          }
+        }
       });
 
-      window.addEventListener('mouseup', () => handleEnd());
+      // Tapping on page margins to turn pages
+      container.addEventListener('click', (e) => {
+        if (e.target.closest('button') || e.target.closest('.page-zoom-hint') || e.target.closest('.photo-frame')) return;
 
-      nextBtn.addEventListener('click', () => {
-        showScene('collage-scene');
-        initCollage();
-        launchEmojis(25);
+        const rect = container.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+
+        if (currentSpread === 0) {
+          // Closed cover clicked -> open
+          flipTo(1);
+        } else {
+          if (clickX > rect.width * 0.5) {
+            flipTo(currentSpread + 1);
+          } else {
+            flipTo(currentSpread - 1);
+          }
+        }
+      });
+
+      // Final surprise button inside Right Base
+      document.addEventListener('click', (e) => {
+        if (e.target && e.target.id === 'final-to-collage-btn') {
+          e.stopPropagation();
+          showScene('collage-scene');
+          initCollage();
+          launchEmojis(30);
+        }
+      });
+
+      // Keyboard arrow navigation
+      document.addEventListener('keydown', (e) => {
+        const albumScene = document.getElementById('album-scene');
+        if (!albumScene || !albumScene.classList.contains('active')) return;
+        if (e.key === 'ArrowRight' || e.key === ' ') {
+          flipTo(currentSpread + 1);
+        } else if (e.key === 'ArrowLeft') {
+          flipTo(currentSpread - 1);
+        }
       });
     }
 
@@ -1515,7 +2096,8 @@
       generateStars('stars-bg-album', 150);
       generateStars('stars-bg-collage', 150);
 
-      buildAlbumCards();
+      buildBookAlbum();
+      initBookInteraction();
       initCatScene();
 
       // Audio toggle button
