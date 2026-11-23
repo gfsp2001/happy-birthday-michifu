@@ -189,9 +189,9 @@
       // Normalize relative to center
       const nx = (px - cx) / scale;
       const ny = -(py - cy) / scale; // invert Y so up is positive
-      // Widen heart horizontally by 1.18 and offset center for lush, full lobes
-      const x = nx / 1.18;
-      const y = ny + 0.14;
+      // Sleek, slender and elegant heart shape
+      const x = nx / 0.94;
+      const y = ny * 1.02 + 0.14;
       const a = x * x + y * y - 1;
       return (a * a * a - x * x * y * y * y) <= 0;
     }
@@ -209,9 +209,9 @@
       ctx.fillRect(0, 0, W, H);
 
       // Radial ambient glow
-      const bgGlow = ctx.createRadialGradient(W / 2, H / 2, 80, W / 2, H / 2, 540);
-      bgGlow.addColorStop(0, "rgba(255, 23, 68, 0.16)");
-      bgGlow.addColorStop(0.7, "rgba(255, 23, 68, 0.04)");
+      const bgGlow = ctx.createRadialGradient(W / 2, H / 2, 80, W / 2, H / 2, 500);
+      bgGlow.addColorStop(0, "rgba(255, 23, 68, 0.15)");
+      bgGlow.addColorStop(0.7, "rgba(255, 23, 68, 0.03)");
       bgGlow.addColorStop(1, "rgba(0, 0, 0, 0)");
       ctx.fillStyle = bgGlow;
       ctx.fillRect(0, 0, W, H);
@@ -222,15 +222,15 @@
       // 3. Grid & Heart Configuration
       const heartCenterX = W / 2;
       const heartCenterY = H / 2 + 10;
-      // Substantially larger heart scale so the diamond QR code is fully immersed with lush margins
-      const heartScale = 430;
+      // Slender, proportional heart scale
+      const heartScale = 385;
 
       // QR sizing and placement
       const N = qrCount; // e.g. 29 or 33
       const angle = isDiamond ? (Math.PI / 4) : 0; // 45 deg or 0 deg
       
-      // Module size
-      const moduleSize = isDiamond ? 12.8 : 13.8;
+      // Module size calibrated to fit snugly inside slender heart
+      const moduleSize = isDiamond ? 12.0 : 13.0;
       const qrCenterCoord = (N - 1) / 2;
 
       // Color of QR modules (vibrant neon red for high contrast)
