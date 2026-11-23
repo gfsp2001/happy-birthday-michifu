@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Corazón Regalo - Michelle 🎁</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background: #08080a;
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 6px;
+      color: #ff3366;
+      text-shadow: 0 0 15px rgba(255, 51, 102, 0.4);
+      text-align: center;
+    }
+    p.subtitle {
+      color: #aaa;
+      font-size: 13px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .toggle-btn {
+      background: #1a1a24;
+      border: 1px solid #ff3366;
+      color: #fff;
+      padding: 8px 18px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 13px;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+    .toggle-btn.active {
+      background: #ff1744;
+      box-shadow: 0 0 15px rgba(255, 23, 68, 0.6);
+    }
+    .canvas-container {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 15px 50px rgba(255, 23, 68, 0.25), 0 0 100px rgba(0, 0, 0, 0.9);
+      max-width: 95vw;
+      max-height: 72vh;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-width: 500px;
+    }
+    .actions {
+      margin-top: 20px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .btn {
+      background: linear-gradient(135deg, #ff1744, #d50000);
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      font-size: 15px;
+      font-weight: 600;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(255, 23, 68, 0.4);
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(255, 23, 68, 0.6);
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: none;
+    }
+    #temp-qr {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎁 Código QR Corazón para Michelle</h1>
+  <p class="subtitle">El QR real está intacto al centro y los bordes rellenan la forma de corazón</p>
+
+  <div class="controls">
+    <button class="toggle-btn active" id="btn-diamond">Estilo Foto (Diamante 45°)</button>
+    <button class="toggle-btn" id="btn-standard">Estilo Recto (0° Máxima Compatibilidad)</button>
+  </div>
+
+  <div id="temp-qr"></div>
+
+  <div class="canvas-container">
+    <canvas id="qr-canvas" width="1080" height="1080"></canvas>
+  </div>
+
+  <div class="actions">
+    <button class="btn" id="download-btn">⬇ Descargar Imagen (PNG)</button>
+    <a href="https://happy-birthday-michifu.vercel.app" target="_blank" class="btn btn-secondary">🌐 Probar Enlace</a>
+  </div>
+
+  <script>
+    const URL_DESTINO = "https://happy-birthday-michifu.vercel.app";
+    let qrModules = null;
+    let qrCount = 0;
+    let isDiamond = true;
+
+    window.onload = function() {
+      // Generate standard QR code object to extract exact 2D modules matrix
+      const qrDiv = document.getElementById('temp-qr');
+      const qrcode = new QRCode(qrDiv, {
+        text: URL_DESTINO,
+        width: 256,
+        height: 256,
+        correctLevel: QRCode.CorrectLevel.H
+      });
+
+      // Extract 2D matrix from qrcodejs internal model
+      setTimeout(() => {
+        if (qrcode._oQRCode && qrcode._oQRCode.modules) {
+          qrModules = qrcode._oQRCode.modules;
+          qrCount = qrcode._oQRCode.moduleCount;
+          renderHeartQR();
+        }
+      }, 300);
+
+      document.getElementById('btn-diamond').onclick = function() {
+        isDiamond = true;
+        this.classList.add('active');
+        document.getElementById('btn-standard').classList.remove('active');
+        renderHeartQR();
+      };
+
+      document.getElementById('btn-standard').onclick = function() {
+        isDiamond = false;
+        this.classList.add('active');
+        document.getElementById('btn-diamond').classList.remove('active');
+        renderHeartQR();
+      };
+
+      document.getElementById('download-btn').onclick = function() {
+        const canvas = document.getElementById('qr-canvas');
+        const link = document.createElement('a');
+        link.download = 'QR-Corazon-Michelle.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      };
+    };
+
+    // Deterministic pseudo-random for filler modules outside QR
+    function pseudoRandom(x, y) {
+      const n = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453;
+      return n - Math.floor(n);
+    }
+
+    // Mathematical test: is point (x, y) inside Heart silhouette?
+    function isInsideHeart(px, py, cx, cy, scale) {
+      // Normalize relative to center
+      const nx = (px - cx) / scale;
+      const ny = -(py - cy) / scale; // invert Y so up is positive
+      // Widen heart horizontally by 1.18 and offset center for lush, full lobes
+      const x = nx / 1.18;
+      const y = ny + 0.14;
+      const a = x * x + y * y - 1;
+      return (a * a * a - x * x * y * y * y) <= 0;
+    }
+
+    function renderHeartQR() {
+      if (!qrModules) return;
+
+      const canvas = document.getElementById('qr-canvas');
+      const ctx = canvas.getContext('2d');
+      const W = canvas.width;
+      const H = canvas.height;
+
+      // 1. Black Background
+      ctx.fillStyle = "#09090b";
+      ctx.fillRect(0, 0, W, H);
+
+      // Radial ambient glow
+      const bgGlow = ctx.createRadialGradient(W / 2, H / 2, 80, W / 2, H / 2, 540);
+      bgGlow.addColorStop(0, "rgba(255, 23, 68, 0.16)");
+      bgGlow.addColorStop(0.7, "rgba(255, 23, 68, 0.04)");
+      bgGlow.addColorStop(1, "rgba(0, 0, 0, 0)");
+      ctx.fillStyle = bgGlow;
+      ctx.fillRect(0, 0, W, H);
+
+      // 2. Corner Ribbons (on background, away from QR)
+      drawBackgroundRibbons(ctx, W, H);
+
+      // 3. Grid & Heart Configuration
+      const heartCenterX = W / 2;
+      const heartCenterY = H / 2 + 10;
+      // Substantially larger heart scale so the diamond QR code is fully immersed with lush margins
+      const heartScale = 430;
+
+      // QR sizing and placement
+      const N = qrCount; // e.g. 29 or 33
+      const angle = isDiamond ? (Math.PI / 4) : 0; // 45 deg or 0 deg
+      
+      // Module size
+      const moduleSize = isDiamond ? 12.8 : 13.8;
+      const qrCenterCoord = (N - 1) / 2;
+
+      // Color of QR modules (vibrant neon red for high contrast)
+      const qrColor = "#ff2453";
+      const qrGlowColor = "rgba(255, 36, 83, 0.4)";
+
+      // Draw modules
+      // We scan a larger grid surrounding the heart
+      const gridRadius = isDiamond ? Math.ceil(N * 1.1) : Math.ceil(N * 0.9);
+
+      ctx.save();
+      ctx.shadowColor = qrGlowColor;
+      ctx.shadowBlur = 4;
+
+      for (let r = -gridRadius; r <= N + gridRadius; r++) {
+        for (let c = -gridRadius; c <= N + gridRadius; c++) {
+          // Calculate center of this cell in canvas space
+          const u = c - qrCenterCoord;
+          const v = r - qrCenterCoord;
+
+          // Rotate around center
+          const rx = u * Math.cos(angle) - v * Math.sin(angle);
+          const ry = u * Math.sin(angle) + v * Math.cos(angle);
+
+          const cellX = heartCenterX + rx * moduleSize;
+          const cellY = heartCenterY + ry * moduleSize;
+
+          const inHeart = isInsideHeart(cellX, cellY, heartCenterX, heartCenterY, heartScale);
+
+          // Check if this module belongs to the REAL QR code
+          const isRealQR = (r >= 0 && r < N && c >= 0 && c < N);
+
+          let shouldDraw = false;
+
+          if (isRealQR) {
+            // REAL QR CODE: untouched and 100% faithful
+            shouldDraw = qrModules[r][c];
+          } else if (inHeart) {
+            // FILLER MODULES outside QR: flow seamlessly into the QR with zero artificial gap
+            shouldDraw = pseudoRandom(r, c) > 0.48;
+          }
+
+          if (shouldDraw) {
+            ctx.fillStyle = qrColor;
+            const drawSize = moduleSize - 0.7;
+            
+            ctx.save();
+            ctx.translate(cellX, cellY);
+            ctx.rotate(angle);
+            ctx.fillRect(-drawSize / 2, -drawSize / 2, drawSize, drawSize);
+            ctx.restore();
+          }
+        }
+      }
+      ctx.restore();
+
+      // 4. Draw 3D Red Satin Bow in Top-Left (Placed safely away from QR)
+      drawLuxuryGiftBow(ctx, 195, 165);
+    }
+
+    function drawBackgroundRibbons(ctx, W, H) {
+      // Top-Left corner diagonal ribbon
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(0, 310);
+      ctx.lineTo(310, 0);
+      ctx.lineTo(255, 0);
+      ctx.lineTo(0, 255);
+      ctx.closePath();
+      const rGrad1 = ctx.createLinearGradient(0, 280, 280, 0);
+      rGrad1.addColorStop(0, "#990018");
+      rGrad1.addColorStop(0.5, "#ff1744");
+      rGrad1.addColorStop(1, "#c40026");
+      ctx.fillStyle = rGrad1;
+      ctx.shadowColor = "rgba(255, 23, 68, 0.5)";
+      ctx.shadowBlur = 15;
+      ctx.fill();
+      ctx.restore();
+
+      // Bottom-Right corner diagonal ribbon
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(W - 270, H);
+      ctx.lineTo(W, H - 270);
+      ctx.lineTo(W, H - 215);
+      ctx.lineTo(W - 215, H);
+      ctx.closePath();
+      const rGrad2 = ctx.createLinearGradient(W - 270, H, W, H - 270);
+      rGrad2.addColorStop(0, "#c40026");
+      rGrad2.addColorStop(0.5, "#ff1744");
+      rGrad2.addColorStop(1, "#990018");
+      ctx.fillStyle = rGrad2;
+      ctx.shadowColor = "rgba(255, 23, 68, 0.5)";
+      ctx.shadowBlur = 15;
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function drawLuxuryGiftBow(ctx, cx, cy) {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(-Math.PI / 4);
+
+      function loopGradient(x1, y1, x2, y2) {
+        const g = ctx.createLinearGradient(x1, y1, x2, y2);
+        g.addColorStop(0, "#ff5252");
+        g.addColorStop(0.2, "#ff1744");
+        g.addColorStop(0.6, "#d50000");
+        g.addColorStop(1, "#800010");
+        return g;
+      }
+
+      ctx.shadowColor = "rgba(0, 0, 0, 0.65)";
+      ctx.shadowBlur = 25;
+      ctx.shadowOffsetY = 15;
+
+      // Ribbon tails
+      ctx.fillStyle = loopGradient(-30, 20, -100, 160);
+      ctx.beginPath();
+      ctx.moveTo(-15, 15);
+      ctx.bezierCurveTo(-50, 60, -90, 110, -100, 160);
+      ctx.lineTo(-80, 170);
+      ctx.lineTo(-65, 145);
+      ctx.lineTo(-45, 165);
+      ctx.bezierCurveTo(-35, 110, -25, 60, 0, 18);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.fillStyle = loopGradient(30, 20, 100, 160);
+      ctx.beginPath();
+      ctx.moveTo(0, 18);
+      ctx.bezierCurveTo(25, 60, 60, 110, 85, 165);
+      ctx.lineTo(100, 145);
+      ctx.lineTo(115, 165);
+      ctx.bezierCurveTo(95, 110, 50, 60, 15, 15);
+      ctx.closePath();
+      ctx.fill();
+
+      // Top-left loop
+      ctx.fillStyle = loopGradient(-20, 0, -120, -80);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.bezierCurveTo(-60, -20, -130, -50, -110, -90);
+      ctx.bezierCurveTo(-90, -120, -40, -80, 0, -20);
+      ctx.closePath();
+      ctx.fill();
+
+      // Top-right loop
+      ctx.fillStyle = loopGradient(20, 0, 120, -80);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.bezierCurveTo(60, -20, 130, -50, 110, -90);
+      ctx.bezierCurveTo(90, -120, 40, -80, 0, -20);
+      ctx.closePath();
+      ctx.fill();
+
+      // Bottom-left loop
+      ctx.fillStyle = loopGradient(-20, 0, -110, 60);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.bezierCurveTo(-50, 10, -110, 40, -100, 80);
+      ctx.bezierCurveTo(-80, 110, -35, 70, 0, 15);
+      ctx.closePath();
+      ctx.fill();
+
+      // Bottom-right loop
+      ctx.fillStyle = loopGradient(20, 0, 110, 60);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.bezierCurveTo(50, 10, 110, 40, 100, 80);
+      ctx.bezierCurveTo(80, 110, 35, 70, 0, 15);
+      ctx.closePath();
+      ctx.fill();
+
+      // Center knot
+      ctx.shadowBlur = 18;
+      ctx.fillStyle = loopGradient(-30, -30, 30, 30);
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 32, 26, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Knot silk fold highlights
+      ctx.strokeStyle = "rgba(255, 200, 200, 0.45)";
+      ctx.lineWidth = 3.5;
+      ctx.beginPath();
+      ctx.arc(0, -6, 20, 0.25 * Math.PI, 0.75 * Math.PI);
+      ctx.stroke();
+
+      ctx.restore();
+    }
+  </script>
+</body>
+</html>
